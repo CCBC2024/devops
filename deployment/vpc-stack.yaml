@@ -1,0 +1,162 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: "VPC stack for charity donation application"
+
+Resources:
+
+  # VPC with Internet Gateway
+  VPC:
+    Type: AWS::EC2::VPC
+    Properties:
+      CidrBlock: 10.0.0.0/16
+      EnableDnsSupport: true
+      EnableDnsHostnames: true
+      Tags:
+        - Key: Name
+          Value: !Sub "${AWS::StackName}"
+
+  # Internet Gateway with a name tag
+  # An internet gateway is a VPC component that allows communication between instances in the VPC and the internet.
+  IGW:
+    Type: AWS::EC2::InternetGateway
+    Properties:
+      Tags:
+        - Key: Name
+          Value: !Sub "${AWS::StackName}-igw"
+
+  # Attach the Internet Gateway to the VPC to enable internet access
+  # This resource requires the VPC and IGW to be created first
+  # An attachment is a connection between a VPC and an internet gateway.
+  VPCtoIGWConnection:
+    Type: AWS::EC2::VPCGatewayAttachment
+    DependsOn:
+      - IGW
+      - VPC
+    Properties:
+      InternetGatewayId: !Ref IGW
+      VpcId: !Ref VPC
+
+  # Public Route Table with a name tag
+  # A route table contains a set of rules, called routes, that are used to determine where network traffic is directed.
+  # Public route table is used to route traffic to the internet gateway which allows the instances in the public subnets to access the internet.
+  # The route table is associated with the VPC.
+  # One route table can have multiple routes.
+  # The route table works similarly to the security group. But the security group is in the instance level and the route table is in the subnet level.
+  # In addition, the security group is stateful and the route table is stateless.
+  # The security group is a firewall that controls the traffic to the instances.
+  # The route table is a set of rules that control the traffic between the subnets.
+  PublicRouteTable:
+    Type: AWS::EC2::RouteTable
+    DependsOn: VPC
+    Properties:
+      VpcId: !Ref VPC
+      Tags:
+        - Key: Name
+          Value: Public Route Table
+
+  # Public route to the internet gateway.
+  # A route is a rule that specifies where to send network traffic.
+  # This route allows traffic from the public subnets to the internet gateway.
+  # The difference between route and route table is that route table is a logical entity that contains routes
+  # and route is an actual route that specifies the destination and the gateway.
+  PublicRoute:
+    Type: AWS::EC2::Route
+    DependsOn:
+      - PublicRouteTable
+      - VPCtoIGWConnection
+    Properties:
+      DestinationCidrBlock: 0.0.0.0/0
+      GatewayId: !Ref IGW
+      RouteTableId: !Ref PublicRouteTable
+
+
+  # Public subnet 1
+  # A subnet is a range of IP addresses in your VPC.
+  # The public subnet one is in the first availability zone in the region.
+  # The subnet is associated with the VPC.
+  PublicSubnet1:
+    Type: AWS::EC2::Subnet
+    DependsOn: VPC
+    Properties:
+      VpcId: !Ref VPC
+
+      # This property is used to enable the instances in the subnet to get public IP addresses.
+      MapPublicIpOnLaunch: true
+
+      # CIDR block for the subnet, this means the subnet can have 256 IP addresses (from 10.0.0.0 to 10.0.0.255)
+      # Typically, the first 4 IP addresses and the last IP address are reserved by AWS.
+      # The first 3 IP addresses are reserved for the VPC router, DNS server, and future use.
+      # The last IP address is reserved for the broadcast address.
+      # Therefore, the number of usable IP addresses in the subnet is 251.
+      # Ref: https://docs.aws.amazon.com/vpc/latest/userguide/subnet-sizing.html
+      CidrBlock: 10.0.0.0/24
+
+      # Get the first Availability Zone in the region
+      AvailabilityZone: !Select
+        - 0
+        - !GetAZs
+          Ref: AWS::Region
+      Tags:
+        - Key: Name
+          Value: Public Subnet 1
+
+  # Public subnet 2
+  # The public subnet two is in the second availability zone in the region.
+  PublicSubnet2:
+    Type: AWS::EC2::Subnet
+    DependsOn: VPC
+    Properties:
+      VpcId: !Ref VPC
+      MapPublicIpOnLaunch: true
+
+      # The IP addresses in the subnet range from 10.0.1.0 to 10.0.1.255
+      CidrBlock: 10.0.1.0/24
+
+      # Get the second Availability Zone in the region
+      AvailabilityZone: !Select
+        - 1
+        - !GetAZs
+          Ref: AWS::Region
+      Tags:
+        - Key: Name
+          Value: Public Subnet 2
+
+  # Associate the public subnet one with the public route table
+  # Why do we need to associate the subnet with the route table?
+  # The subnet is associated with the route table to enable the instances in the subnet to communicate with the internet.
+  PublicRouteTableAssociation1:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    DependsOn:
+      - PublicRouteTable
+      - PublicSubnet1
+    Properties:
+      RouteTableId: !Ref PublicRouteTable
+      SubnetId: !Ref PublicSubnet1
+
+  # Associate the public subnet two with the public route table
+  PublicRouteTableAssociation2:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    DependsOn:
+      - PublicRouteTable
+      - PublicSubnet2
+    Properties:
+      RouteTableId: !Ref PublicRouteTable
+      SubnetId: !Ref PublicSubnet2
+
+Outputs:
+  VpcId:
+    Description: "The ID of the VPC"
+    Value: !Ref VPC
+    Export:
+      Name: !Sub "${AWS::StackName}-VpcId"
+
+  PublicSubnet1:
+    Description: "The ID of the first public subnet"
+    Value: !Ref PublicSubnet1
+    Export:
+      Name: !Sub "${AWS::StackName}-PublicSubnet1"
+
+  PublicSubnet2:
+    Description: "The ID of the second public subnet"
+    Value: !Ref PublicSubnet2
+    Export:
+      Name: !Sub "${AWS::StackName}-PublicSubnet2"

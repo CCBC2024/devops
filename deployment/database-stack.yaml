@@ -1,0 +1,28 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: "DynamoDB table for campaigns"
+
+Resources:
+  campaigns:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: "campaigns"
+
+      # Define the primary key for the table as an attribute named id
+      AttributeDefinitions:
+        - AttributeName: id
+          AttributeType: S
+      BillingMode: PAY_PER_REQUEST
+
+      # KeySchema specifies the primary key as a single attribute named id
+      KeySchema:
+        - AttributeName: id
+          KeyType: HASH
+
+      # StreamSpecification enables the table to capture both the new and old images of an item
+      StreamSpecification:
+        StreamViewType: NEW_AND_OLD_IMAGES
+
+      # Tags for the table
+      Tags:
+        - Key: Application
+          Value: CharityDonation
