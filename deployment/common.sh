@@ -19,7 +19,7 @@ create_cloudformation_stack() {
     local stack_name=$1
     local template_file=$2
 
-    echo -e "\nCreating $stack_name ..."
+    echo "Creating $stack_name ..."
     aws cloudformation create-stack --stack-name "$stack_name" --template-body file://"$template_file"
     if [ $? -ne 0 ]; then
         echo "$stack_name creation failed"
@@ -64,7 +64,7 @@ wait_for_stack_deletion() {
         echo "${stack_name} stack deletion failed"
         exit 1
     fi
-    echo -e "\n${stack_name} stack deleted successfully"
+    echo "${stack_name} stack deleted successfully"
 }
 
 # get stack output function,
