@@ -26,7 +26,7 @@ Create a new repository in CodeCommit named `charity-donation-backend`.
 Then, push the backend code to the repository.
 ```bash
 cd /home/ec2-user/environment/charity-donation-application
-sh ./setup-backend-repository.sh
+sh ./charity-donation-deployment/setup-backend-repository.sh
 ```
 
 The charity-donation-backend repository is created in CodeCommit.
@@ -43,7 +43,7 @@ Create a new repository in CodeCommit named `charity-donation-frontend`.
 Then, push the frontend code to the repository.
 ```bash
 cd /home/ec2-user/environment/charity-donation-application
-sh ./setup-frontend-repository.sh
+sh ./charity-donation-deployment/setup-frontend-repository.sh
 ```
 
 ### Task 2.2: Containerize the application using docker images in the Cloud9 environment.
@@ -51,7 +51,7 @@ sh ./setup-frontend-repository.sh
 Build the docker image for the backend application.
 ```bash
 cd /home/ec2-user/environment/charity-donation-application/
-sh ./build-backend-docker-image.sh
+sh ./charity-donation-deployment/build-backend-docker-image.sh
 ```
 
 The docker image is built successfully.
@@ -61,7 +61,7 @@ The docker image is built successfully.
 Build the docker image for the frontend application.
 ```bash
 cd /home/ec2-user/environment/charity-donation-application/
-sh ./build-frontend-docker-image.sh
+sh ./charity-donation-deployment/build-frontend-docker-image.sh
 ```
 
 ### Task 2.3: Push the docker images to the ECR.
@@ -71,7 +71,7 @@ Create a new repository in ECR named `charity-donation-backend`.
 Then, push the backend docker image to the repository.
 ```bash
 cd /home/ec2-user/environment/charity-donation-application/
-sh ./create-backend-ecr-repository.sh
+sh ./charity-donation-deployment/create-backend-ecr-repository.sh
 ```
 
 The charity-donation-backend repository is created in terminal.
@@ -83,7 +83,7 @@ The charity-donation-backend repository is created in ECR.
 
 Push the backend docker image to the repository.
 ```bash
-sh ./push-backend-image-to-ecr.sh
+sh ../charity-donation-deployment/push-backend-image-to-ecr.sh
 ```
 
 The backend docker image is pushed to the repository in terminal.
@@ -98,12 +98,12 @@ Create a new repository in ECR named `charity-donation-frontend`.
 Then, push the frontend docker image to the repository.
 ```bash
 cd /home/ec2-user/environment/charity-donation-application/
-sh ./create-frontend-ecr-repository.sh
+sh ./charity-donation-deployment/create-frontend-ecr-repository.sh
 ```
 
 Push the frontend docker image to the repository.
 ```bash
-sh ./push-frontend-image-to-ecr.sh
+sh ./charity-donation-deployment/push-frontend-image-to-ecr.sh
 ```
 
 ### Conclusion

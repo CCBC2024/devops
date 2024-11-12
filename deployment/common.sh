@@ -204,12 +204,17 @@ create_ecr_repository() {
     echo "Policy for ECR repository $repository_name set successfully"
 }
 
+# get account id function
+get_account_id() {
+    aws sts get-caller-identity | grep Account | cut -d '"' -f4
+}
+
 # push docker image to ecr function
 # takes docker image name as argument
 push_docker_image_to_ecr() {
     local docker_image_name=$1
     local account_id
-    account_id=$(aws sts get-caller-identity | grep Account | cut -d '"' -f4)
+    account_id=$(get_account_id)
     echo "Pushing docker image $docker_image_name to ECR..."
     aws ecr get-login-password --region "$(aws configure get region)" | docker login --username AWS --password-stdin "$account_id.dkr.ecr.$(aws configure get region).amazonaws.com"
     docker tag "$docker_image_name":latest "$account_id.dkr.ecr.$(aws configure get region).amazonaws.com/$docker_image_name":latest
@@ -219,4 +224,33 @@ push_docker_image_to_ecr() {
         exit 1
     fi
     echo "Docker image $docker_image_name pushed to ECR successfully"
+}
+
+# create ecs cluster function
+# takes cluster name as argument
+create_ecs_cluster() {
+    local cluster_name=$1
+    echo "Creating ECS cluster $cluster_name ..."
+    aws ecs create-cluster \
+        --cluster-name "$cluster_name" \
+        --capacity-providers FARGATE \
+        --vpc-configuration "subnets=PublicSubnet1,PublicSubnet2,vpc=LabVPC"
+    if [ $? -ne 0 ]; then
+        echo "ECS cluster $cluster_name creation failed"
+        exit 1
+    fi
+    echo "ECS cluster $cluster_name created successfully"
+}
+
+# create ecs task definition function
+# takes task definition file as argument
+create_ecs_task_definition() {
+    local task_definition_file=$1
+    echo "Creating ECS task definition from $task_definition_file ..."
+    aws ecs register-task-definition --cli-input-json "file://$task_definition_file"
+    if [ $? -ne 0 ]; then
+        echo "ECS task definition creation failed"
+        exit 1
+    fi
+    echo "ECS task definition created successfully"
 }
