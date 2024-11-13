@@ -254,3 +254,174 @@ create_ecs_task_definition() {
     fi
     echo "ECS task definition created successfully"
 }
+
+# create security group function
+# takes security group name as argument
+create_security_group() {
+    local security_group_name=$1
+    local vpc_id
+    vpc_id=$(get_vpc_id)
+    echo "Creating security group $security_group_name ..."
+    aws ec2 create-security-group \
+        --group-name "$security_group_name" \
+        --description "Security group for charity donation platform allowing HTTP and custom port" \
+        --vpc-id "$vpc_id"
+    if [ $? -ne 0 ]; then
+        echo "Security group $security_group_name creation failed"
+        exit 1
+    fi
+    echo "Security group $security_group_name created successfully"
+}
+
+# add inbound rules tcp security group function
+# takes security group name as first argument
+# takes port as second argument
+add_inbound_rules_tcp_security_group() {
+    local security_group_name=$1
+    local port=$2
+    local security_group_id
+    security_group_id=$(get_security_group_id "$security_group_name")
+    echo "Adding inbound rules that allow TCP traffic from any IPv4 address on port $port ..."
+    aws ec2 authorize-security-group-ingress \
+        --group-id "$security_group_id" \
+        --protocol tcp \
+        --port "$port" \
+        --cidr 0.0.0.0/0
+
+    if [ $? -ne 0 ]; then
+        echo "Adding inbound rules for security group $security_group_name failed"
+        exit 1
+    fi
+    echo "Inbound rules added successfully for security group $security_group_name"
+}
+
+# create load balancer function
+# takes load balancer name as first argument
+# takes security group name as second argument
+# takes subnet names as third argument and fourth argument
+create_load_balancer() {
+    local load_balancer_name=$1
+    local security_group_name=$2
+    local subnet1_name=$3
+    local subnet2_name=$4
+    local security_group_id
+    local subnet1_id
+    local subnet2_id
+    security_group_id=$(get_security_group_id "$security_group_name")
+    subnet1_id=$(get_subnet_id "$subnet1_name")
+    subnet2_id=$(get_subnet_id "$subnet2_name")
+    echo "Creating load balancer $load_balancer_name ..."
+    aws elbv2 create-load-balancer \
+        --name "$load_balancer_name" \
+        --subnets "$subnet1_id" "$subnet2_id" \
+        --security-groups "$security_group_id" \
+        --scheme internet-facing \
+        --type application \
+        --ip-address-type ipv4
+    if [ $? -ne 0 ]; then
+        echo "Load balancer $load_balancer_name creation failed"
+        exit 1
+    fi
+    echo "Load balancer $load_balancer_name created successfully"
+
+    echo "Waiting until load balancer available..."
+    aws elbv2 wait load-balancer-available --names "$load_balancer_name"
+    if [ $? -ne 0 ]; then
+        echo "Load balancer $load_balancer_name is not available"
+        exit 1
+    fi
+    echo "Load balancer $load_balancer_name is available"
+}
+
+# create listener function
+# takes load balancer name as first argument
+# takes listener port as second argument
+# takes target group arn as third argument
+create_listener() {
+    local load_balancer_name=$1
+    local listener_port=$2
+    local target_group_arn=$3
+    local load_balancer_arn
+    load_balancer_arn=$(get_load_balancer_arn "$load_balancer_name")
+    echo "Creating listener on port $listener_port for load balancer $load_balancer_name ..."
+    aws elbv2 create-listener \
+        --load-balancer-arn "$load_balancer_arn" \
+        --protocol HTTP \
+        --port "$listener_port" \
+        --default-actions Type=forward,TargetGroupArn="$target_group_arn"
+    if [ $? -ne 0 ]; then
+        echo "Listener creation on port $listener_port for load balancer $load_balancer_name failed"
+        exit 1
+    fi
+    echo "Listener created on port $listener_port for load balancer $load_balancer_name successfully"
+}
+
+# add rule to listener function
+# takes listener arn as first argument
+# takes path as second argument
+# takes target group arn as third argument
+add_rule_to_listener() {
+    local listener_arn=$1
+    local path=$2
+    local target_group_arn=$3
+    echo "Adding rule to listener $listener_arn ..."
+    aws elbv2 create-rule \
+        --listener-arn "$listener_arn" \
+        --conditions Field=path-pattern,Values="$path" \
+        --priority 1 \
+        --actions Type=forward,TargetGroupArn="$target_group_arn"
+    if [ $? -ne 0 ]; then
+        echo "Adding rule to listener $listener_arn failed"
+        exit 1
+    fi
+    echo "Rule added to listener $listener_arn successfully"
+}
+
+# get vpc id function for the vpc with tag Name=LabVPC
+get_vpc_id() {
+    aws ec2 describe-vpcs --filters "Name=tag:Name,Values=LabVPC" --query "Vpcs[*].VpcId" --output text
+}
+
+# get security group id function
+# takes security group name as argument
+get_security_group_id() {
+  local security_group_name=$1
+  aws ec2 describe-security-groups --filters "Name=group-name,Values=$security_group_name" --query "SecurityGroups[0].GroupId" --output text
+}
+
+# get subnet id function
+# takes subnet name as argument
+get_subnet_id() {
+  local subnet_name=$1
+  aws ec2 describe-subnets --filters "Name=tag:Name,Values=$subnet_name" --query "Subnets[0].SubnetId" --output text
+}
+
+# get load balancer arn function
+# takes load balancer name as argument
+get_load_balancer_arn() {
+    local load_balancer_name=$1
+    aws elbv2 describe-load-balancers --names "$load_balancer_name" --query "LoadBalancers[0].LoadBalancerArn" --output text
+}
+
+# get load balancer dns name function
+# takes load balancer name as argument
+get_load_balancer_dns_name() {
+    local load_balancer_name=$1
+    aws elbv2 describe-load-balancers --names "$load_balancer_name" --query "LoadBalancers[0].DNSName" --output text
+}
+
+# get target group arn function
+# takes target group name as argument
+get_target_group_arn() {
+    local target_group_name=$1
+    aws elbv2 describe-target-groups --names "$target_group_name" --query "TargetGroups[0].TargetGroupArn" --output text
+}
+
+# get listener arn function
+# takes load balancer arn as first argument
+# takes port as second argument
+get_listener_arn() {
+    local load_balancer_arn=$1
+    local port=$2
+    aws elbv2 describe-listeners --load-balancer-arn "$load_balancer_arn" --query "Listeners[?Port==\`$port\`].ListenerArn" --output text
+}

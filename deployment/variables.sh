@@ -42,5 +42,25 @@ export ecs_backend_task_definition_path="${task_definition_directory}/${backend_
 export ecs_frontend_task_definition_template_path="${task_definition_directory}/${frontend_source_code}-template.json"
 export ecs_backend_task_definition_template_path="${task_definition_directory}/${backend_source_code}-template.json"
 
+# security group name
+export security_group_name="charityDonationSG"
+
 # load balancer name
 export load_balancer_name="charityDonationLB"
+
+# subnet names
+export public_subnet1_name="Public Subnet1"
+export public_subnet2_name="Public Subnet2"
+
+# target group names
+export frontend_tg_one_name="frontend-tg-one"
+export frontend_tg_two_name="frontend-tg-two"
+export backend_tg_one_name="backend-tg-one"
+export backend_tg_two_name="backend-tg-two"
+
+# backend path patterns
+export backend_path_pattern="/api/*"
+
+# listener ports
+export listener_port_80="80"
+export listener_port_8080="8080"
