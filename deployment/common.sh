@@ -255,6 +255,29 @@ create_ecs_task_definition() {
     echo "ECS task definition created successfully"
 }
 
+# create target group function
+# takes target group name as first argument
+# takes health check path as second argument
+create_target_group() {
+    local target_group_name=$1
+    local health_check_path=$2
+    local vpc_id
+    vpc_id=$(get_vpc_id)
+    echo "Creating target group $target_group_name ..."
+    aws elbv2 create-target-group \
+        --name "$target_group_name" \
+        --protocol HTTP \
+        --port 8080 \
+        --vpc-id "$vpc_id" \
+        --target-type ip \
+        --health-check-path "$health_check_path"
+    if [ $? -ne 0 ]; then
+        echo "Target group $target_group_name creation failed"
+        exit 1
+    fi
+    echo "Target group $target_group_name created successfully"
+}
+
 # create security group function
 # takes security group name as argument
 create_security_group() {

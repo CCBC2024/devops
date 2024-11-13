@@ -64,3 +64,7 @@ export backend_path_pattern="/api/*"
 # listener ports
 export listener_port_80="80"
 export listener_port_8080="8080"
+
+# health check path
+export frontend_health_check_path="/"
+export backend_health_check_path="/api/campaigns"
