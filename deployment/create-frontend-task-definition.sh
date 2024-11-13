@@ -8,7 +8,7 @@ source ./charity-donation-deployment/variables.sh
 
 # define environment variables
 NEXT_PUBLIC_CHARITY_CONTRACT_ADDRESS="0x7C1FcD9b02DF2d950463609BA7bd2229eA8BC991"
-LOAD_BALANCER_DNS=$(aws elbv2 describe-load-balancers --query "LoadBalancers[?LoadBalancerName=='${load_balancer_name}'].DNSName" --output text)
+LOAD_BALANCER_DNS=$(get_load_balancer_dns_name $load_balancer_name)
 NEXT_PUBLIC_BACKEND_API_URL="http://$LOAD_BALANCER_DNS"
 ACCOUNT_ID=$(get_account_id)
 
