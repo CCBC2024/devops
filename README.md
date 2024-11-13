@@ -111,4 +111,43 @@ In this second implementation stage, we successfully migrated the application co
 In the next stage, we are going to set up the ECS cluster for deployment. It involves creating the ECS cluster, task definition, and service for the backend and frontend applications.
 
 
+## Stage 3
+To prepare for this stage, we also need to set up Cloud9 and upload the project file to the Cloud9 environment, like in the stage 2.
+
+### Task 3.1: Create an ECS cluster with the name: blockchain-charity-cluster.
+Create the ecs cluster by running the following command:
+```bash
+cd /home/ec2-user/environment/charity-donation-application/
+sh ./charity-donation-deployment/create-ecs-cluster.sh
+```
+
+### Task 3.2: Create task definitions for the application. One task definition for the backend API and one for the frontend web application.
+Create task definition for frontend by running the following command:
+```bash
+cd /home/ec2-user/environment/charity-donation-application/
+sh ./charity-donation-deployment/create-frontend-task-definition.sh
+```
+
+Create task definition for backend by running the following command:
+```bash
+cd /home/ec2-user/environment/charity-donation-application/
+sh ./charity-donation-deployment/create-backend-task-definition.sh
+```
+
+### Task 3.3: Create security groups, load balancers, and target groups for the ECS services.
+Create target groups for the frontend and backend by running the following command:
+```bash
+cd /home/ec2-user/environment/charity-donation-application/
+sh ./charity-donation-deployment/create-target-groups.sh
+```
+
+Setup security groups and load balancers for the ECS services by running the following command:
+```bash
+cd /home/ec2-user/environment/charity-donation-application/
+sh ./charity-donation-deployment/setup-sg-lb.sh
+```
+
+### Task 3.4: Create ECS services for the application. One service for the backend API and one for the frontend web application.
+
+
 
