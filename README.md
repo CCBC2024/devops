@@ -1,5 +1,14 @@
 # DevOps
 
+## Stage 1:
+Set up the vpc, dynamodb, and cloud9 environment.
+### Set up the VPC
+Create the VPC by running the following command:
+```bash
+cd /home/ec2-user/environment/charity-donation-application/
+sh ./charity-donation-deployment/setup-vpc.sh
+```
+
 ## Stage 2:
 
 To prepare for this stage, we need to have the following resources:
@@ -83,7 +92,7 @@ The charity-donation-backend repository is created in ECR.
 
 Push the backend docker image to the repository.
 ```bash
-sh ../charity-donation-deployment/push-backend-image-to-ecr.sh
+sh ./charity-donation-deployment/push-backend-image-to-ecr.sh
 ```
 
 The backend docker image is pushed to the repository in terminal.
@@ -110,9 +119,17 @@ sh ./charity-donation-deployment/push-frontend-image-to-ecr.sh
 In this second implementation stage, we successfully migrated the application code to CodeCommit, containerized the application using docker images in the Cloud9 environment, and pushed the docker images to the ECR. The backend and frontend applications are now available in the ECR repositories.
 In the next stage, we are going to set up the ECS cluster for deployment. It involves creating the ECS cluster, task definition, and service for the backend and frontend applications.
 
+### Setup all the resources in the stage 2
+```bash
+cd /home/ec2-user/environment/charity-donation-application/
+sh ./charity-donation-deployment/setup-stage2.sh
+```
+
 
 ## Stage 3
 To prepare for this stage, we also need to set up Cloud9 and upload the project file to the Cloud9 environment, like in the stage 2.
+In addition, we need to set up the DynamoDB table for the in the Learner Lab: https://awsacademy.instructure.com/courses/92322/modules/items/8491687.
+The detail of setting up the DynamoDB table is in the task 1.2 of the of stage 1.
 
 ### Task 3.1: Create an ECS cluster with the name: blockchain-charity-cluster.
 Create the ecs cluster by running the following command:
@@ -122,6 +139,8 @@ sh ./charity-donation-deployment/create-ecs-cluster.sh
 ```
 
 ### Task 3.2: Create task definitions for the application. One task definition for the backend API and one for the frontend web application.
+Run this task after the task 3.1 and 3.3 are completed.
+
 Create task definition for frontend by running the following command:
 ```bash
 cd /home/ec2-user/environment/charity-donation-application/
@@ -129,6 +148,8 @@ sh ./charity-donation-deployment/create-frontend-task-definition.sh
 ```
 
 Create task definition for backend by running the following command:
+This command will require the AWS credentials to create the task definition.
+Please provide the AWS credentials when prompted. The credentials can be gotten from Learner Lab or your own AWS account.
 ```bash
 cd /home/ec2-user/environment/charity-donation-application/
 sh ./charity-donation-deployment/create-backend-task-definition.sh
