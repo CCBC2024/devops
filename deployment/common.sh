@@ -233,8 +233,7 @@ create_ecs_cluster() {
     echo "Creating ECS cluster $cluster_name ..."
     aws ecs create-cluster \
         --cluster-name "$cluster_name" \
-        --capacity-providers FARGATE \
-        --vpc-configuration "subnets=PublicSubnet1,PublicSubnet2,vpc=LabVPC"
+        --capacity-providers FARGATE
     if [ $? -ne 0 ]; then
         echo "ECS cluster $cluster_name creation failed"
         exit 1
