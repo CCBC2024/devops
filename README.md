@@ -19,9 +19,9 @@ With the following settings:
 - Name: charityDonationIDE
 - Instance type: t3.small
 - Platform: Amazon Linux
-- Network settings: 
-  - VPC: LabVPC, 
-  - Subnet: Public Subnet1 
+- Network settings:
+  - VPC: LabVPC,
+  - Subnet: Public Subnet1
   - Connection: SSH
 
 Then upload the project file to the Cloud9 environment, which named `charity-donation-application.zip`.
@@ -139,8 +139,8 @@ sh ./charity-donation-deployment/create-ecs-cluster.sh
 ```
 
 ### Task 3.3: Create security groups, load balancers, and target groups for the ECS services.
-Because the frontend need to use the load balancer dns as the backend api url.
-So wee need provision this task before run the task 3.2.
+Because the frontend needs to use the load balancer dns as the backend api url.
+So we need to provision this task before run the task 3.2.
 
 Create target groups for the frontend and backend by running the following command:
 ```bash
@@ -183,6 +183,11 @@ Create ECS services for the backend by running the following command:
 cd /home/ec2-user/environment/charity-donation-application/
 sh ./charity-donation-deployment/create-backend-ecs-service.sh
 ```
+
+### Conclusion
+In this third implementation stage, we successfully created an ECS cluster, task definitions, and services for the backend and frontend applications. The security groups, load balancers, and target groups were also set up for the ECS services. The applications are now ready for deployment in the ECS cluster.
+In the final stage, we will set up the CI/CD pipeline for automated deployment of the applications.
+The application should be accessible after the final stage is completed.
 
 
 
