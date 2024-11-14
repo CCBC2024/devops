@@ -1,10 +1,10 @@
 # setup vpc by cloudformation
 
 # import the common functions
-source common.sh
+source ./charity-donation-deployment/common.sh
 
 # import the variables
-source variables.sh
+source ./charity-donation-deployment/variables.sh
 
 # validate cloudformation template
 validate_cloudformation_template $vpc_stack_template

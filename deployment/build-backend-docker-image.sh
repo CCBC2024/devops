@@ -1,10 +1,10 @@
 # Create backend repository
 
 # import variables
-source ./variables.sh
+source ./charity-donation-deployment/variables.sh
 
 # import common functions
-source ./common.sh
+source ./charity-donation-deployment/common.sh
 
 # build backend docker image
 build_docker_image $backend_directory $backend_docker_image_name

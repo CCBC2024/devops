@@ -1,5 +1,14 @@
 # DevOps
 
+## Stage 1:
+Set up the vpc, dynamodb, and cloud9 environment.
+### Set up the VPC
+Create the VPC by running the following command:
+```bash
+cd /home/ec2-user/environment/charity-donation-application/
+sh ./charity-donation-deployment/setup-vpc.sh
+```
+
 ## Stage 2:
 
 To prepare for this stage, we need to have the following resources:
@@ -26,7 +35,7 @@ Create a new repository in CodeCommit named `charity-donation-backend`.
 Then, push the backend code to the repository.
 ```bash
 cd /home/ec2-user/environment/charity-donation-application
-sh ./setup-backend-repository.sh
+sh ./charity-donation-deployment/setup-backend-repository.sh
 ```
 
 The charity-donation-backend repository is created in CodeCommit.
@@ -43,7 +52,7 @@ Create a new repository in CodeCommit named `charity-donation-frontend`.
 Then, push the frontend code to the repository.
 ```bash
 cd /home/ec2-user/environment/charity-donation-application
-sh ./setup-frontend-repository.sh
+sh ./charity-donation-deployment/setup-frontend-repository.sh
 ```
 
 ### Task 2.2: Containerize the application using docker images in the Cloud9 environment.
@@ -51,7 +60,7 @@ sh ./setup-frontend-repository.sh
 Build the docker image for the backend application.
 ```bash
 cd /home/ec2-user/environment/charity-donation-application/
-sh ./build-backend-docker-image.sh
+sh ./charity-donation-deployment/build-backend-docker-image.sh
 ```
 
 The docker image is built successfully.
@@ -61,7 +70,7 @@ The docker image is built successfully.
 Build the docker image for the frontend application.
 ```bash
 cd /home/ec2-user/environment/charity-donation-application/
-sh ./build-frontend-docker-image.sh
+sh ./charity-donation-deployment/build-frontend-docker-image.sh
 ```
 
 ### Task 2.3: Push the docker images to the ECR.
@@ -71,7 +80,7 @@ Create a new repository in ECR named `charity-donation-backend`.
 Then, push the backend docker image to the repository.
 ```bash
 cd /home/ec2-user/environment/charity-donation-application/
-sh ./create-backend-ecr-repository.sh
+sh ./charity-donation-deployment/create-backend-ecr-repository.sh
 ```
 
 The charity-donation-backend repository is created in terminal.
@@ -83,7 +92,7 @@ The charity-donation-backend repository is created in ECR.
 
 Push the backend docker image to the repository.
 ```bash
-sh ./push-backend-image-to-ecr.sh
+sh ./charity-donation-deployment/push-backend-image-to-ecr.sh
 ```
 
 The backend docker image is pushed to the repository in terminal.
@@ -98,17 +107,83 @@ Create a new repository in ECR named `charity-donation-frontend`.
 Then, push the frontend docker image to the repository.
 ```bash
 cd /home/ec2-user/environment/charity-donation-application/
-sh ./create-frontend-ecr-repository.sh
+sh ./charity-donation-deployment/create-frontend-ecr-repository.sh
 ```
 
 Push the frontend docker image to the repository.
 ```bash
-sh ./push-frontend-image-to-ecr.sh
+sh ./charity-donation-deployment/push-frontend-image-to-ecr.sh
 ```
 
 ### Conclusion
 In this second implementation stage, we successfully migrated the application code to CodeCommit, containerized the application using docker images in the Cloud9 environment, and pushed the docker images to the ECR. The backend and frontend applications are now available in the ECR repositories.
 In the next stage, we are going to set up the ECS cluster for deployment. It involves creating the ECS cluster, task definition, and service for the backend and frontend applications.
+
+### Setup all the resources in the stage 2
+To setup all the resources in the stage 2, run the following command:
+```bash
+cd /home/ec2-user/environment/charity-donation-application/
+sh ./charity-donation-deployment/setup-stage2.sh
+```
+
+## Stage 3
+To prepare for this stage, we also need to set up Cloud9 and upload the project file to the Cloud9 environment, like in the stage 2.
+In addition, we need to set up the DynamoDB table for the in the Learner Lab: https://awsacademy.instructure.com/courses/92322/modules/items/8491687.
+The detail of setting up the DynamoDB table is in the task 1.2 of the of stage 1.
+
+### Task 3.1: Create an ECS cluster with the name: blockchain-charity-cluster.
+Create the ecs cluster by running the following command:
+```bash
+cd /home/ec2-user/environment/charity-donation-application/
+sh ./charity-donation-deployment/create-ecs-cluster.sh
+```
+
+### Task 3.3: Create security groups, load balancers, and target groups for the ECS services.
+Because the frontend need to use the load balancer dns as the backend api url.
+So wee need provision this task before run the task 3.2.
+
+Create target groups for the frontend and backend by running the following command:
+```bash
+cd /home/ec2-user/environment/charity-donation-application/
+sh ./charity-donation-deployment/create-target-group.sh
+```
+
+Setup security groups and load balancers for the ECS services by running the following command:
+```bash
+cd /home/ec2-user/environment/charity-donation-application/
+sh ./charity-donation-deployment/setup-sg-lb.sh
+```
+
+### Task 3.2: Create task definitions for the application. One task definition for the backend API and one for the frontend web application.
+Run this task after the task 3.1 and 3.3 are completed.
+
+Create task definition for frontend by running the following command:
+```bash
+cd /home/ec2-user/environment/charity-donation-application/
+sh ./charity-donation-deployment/create-frontend-task-definition.sh
+```
+
+Create task definition for backend by running the following command:
+This command will require the AWS credentials to create the task definition.
+Please provide the AWS credentials when prompted. The credentials can be gotten from Learner Lab or your own AWS account.
+```bash
+cd /home/ec2-user/environment/charity-donation-application/
+sh ./charity-donation-deployment/create-backend-task-definition.sh
+```
+
+### Task 3.4: Create ECS services for the application. One service for the backend API and one for the frontend web application.
+Create ECS services for the frontend by running the following command:
+```bash
+cd /home/ec2-user/environment/charity-donation-application/
+sh ./charity-donation-deployment/create-frontend-ecs-service.sh
+```
+
+Create ECS services for the backend by running the following command:
+```bash
+cd /home/ec2-user/environment/charity-donation-application/
+sh ./charity-donation-deployment/create-backend-ecs-service.sh
+```
+
 
 
 
