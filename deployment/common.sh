@@ -362,9 +362,11 @@ create_load_balancer() {
 create_listener() {
     local load_balancer_name=$1
     local listener_port=$2
-    local target_group_arn=$3
+    local target_group_name=$3
     local load_balancer_arn
+    local target_group_arn
     load_balancer_arn=$(get_load_balancer_arn "$load_balancer_name")
+    target_group_arn=$(get_target_group_arn "$target_group_name")
     echo "Creating listener on port $listener_port for load balancer $load_balancer_name ..."
     aws elbv2 create-listener \
         --load-balancer-arn "$load_balancer_arn" \
@@ -381,11 +383,13 @@ create_listener() {
 # add rule to listener function
 # takes listener arn as first argument
 # takes path as second argument
-# takes target group arn as third argument
+# takes target group name as third argument
 add_rule_to_listener() {
     local listener_arn=$1
     local path=$2
-    local target_group_arn=$3
+    local target_group_name=$3
+    local target_group_arn
+    target_group_arn=$(get_target_group_arn "$target_group_name")
     echo "Adding rule to listener $listener_arn ..."
     aws elbv2 create-rule \
         --listener-arn "$listener_arn" \
@@ -455,11 +459,13 @@ get_target_group_arn() {
 }
 
 # get listener arn function
-# takes load balancer arn as first argument
+# takes load balancer name as first argument
 # takes port as second argument
 get_listener_arn() {
-    local load_balancer_arn=$1
+    local load_balancer_name=$1
     local port=$2
+    local load_balancer_arn
+    load_balancer_arn=$(get_load_balancer_arn "$load_balancer_name")
     aws elbv2 describe-listeners --load-balancer-arn "$load_balancer_arn" --query "Listeners[?Port==\`$port\`].ListenerArn" --output text
 }
 

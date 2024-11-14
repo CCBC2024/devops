@@ -6,6 +6,10 @@ source ./charity-donation-deployment/variables.sh
 # import common functions
 source ./charity-donation-deployment/common.sh
 
+# Disable pager for aws cli output to avoid manual intervention for large outputs.
+# It is make sure the script runs without interruption
+export AWS_PAGER=""
+
 # Step 1: Create a security group
 create_security_group "$security_group_name"
 

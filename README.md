@@ -141,7 +141,7 @@ So wee need provision this task before run the task 3.2.
 Create target groups for the frontend and backend by running the following command:
 ```bash
 cd /home/ec2-user/environment/charity-donation-application/
-sh ./charity-donation-deployment/create-target-groups.sh
+sh ./charity-donation-deployment/create-target-group.sh
 ```
 
 Setup security groups and load balancers for the ECS services by running the following command:
