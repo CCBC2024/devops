@@ -8,6 +8,7 @@ deployment_directory="${root_directory}/charity-donation-deployment"
 cloudformation_directory="${deployment_directory}/cloudformation"
 ecs_directory="${deployment_directory}/ecs"
 task_definition_directory="${ecs_directory}/task-definition"
+ecs_service_directory="${ecs_directory}/service"
 
 # vpc cloudformation stack
 export vpc_stack_name="vpc-stack"
@@ -41,6 +42,12 @@ export ecs_frontend_task_definition_path="${task_definition_directory}/${fronten
 export ecs_backend_task_definition_path="${task_definition_directory}/${backend_source_code}.json"
 export ecs_frontend_task_definition_template_path="${task_definition_directory}/${frontend_source_code}-template.json"
 export ecs_backend_task_definition_template_path="${task_definition_directory}/${backend_source_code}-template.json"
+
+# ecs service names
+export frontend_ecs_service_path="${ecs_service_directory}/${frontend_source_code}.json"
+export backend_ecs_service_path="${ecs_service_directory}/${backend_source_code}.json"
+export frontend_ecs_service_template_path="${ecs_service_directory}/${frontend_source_code}-template.json"
+export backend_ecs_service_template_path="${ecs_service_directory}/${backend_source_code}-template.json"
 
 # security group name
 export security_group_name="charityDonationSG"

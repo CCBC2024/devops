@@ -135,6 +135,9 @@ sh ./charity-donation-deployment/create-backend-task-definition.sh
 ```
 
 ### Task 3.3: Create security groups, load balancers, and target groups for the ECS services.
+Because the frontend need to use the load balancer dns as the backend api url.
+So wee need provision this task before run the task 3.2.
+
 Create target groups for the frontend and backend by running the following command:
 ```bash
 cd /home/ec2-user/environment/charity-donation-application/
@@ -148,6 +151,18 @@ sh ./charity-donation-deployment/setup-sg-lb.sh
 ```
 
 ### Task 3.4: Create ECS services for the application. One service for the backend API and one for the frontend web application.
+Create ECS services for the frontend by running the following command:
+```bash
+cd /home/ec2-user/environment/charity-donation-application/
+sh ./charity-donation-deployment/create-frontend-ecs-service.sh
+```
+
+Create ECS services for the backend by running the following command:
+```bash
+cd /home/ec2-user/environment/charity-donation-application/
+sh ./charity-donation-deployment/create-backend-ecs-service.sh
+```
+
 
 
 

@@ -400,6 +400,21 @@ add_rule_to_listener() {
     echo "Rule added to listener $listener_arn successfully"
 }
 
+# create ecs service function
+# takes service name as first argument
+# takes configuration file path as second argument
+create_ecs_service() {
+    local service_name=$1
+    local configuration_file_path=$2
+    echo "Creating ECS service $service_name ..."
+    aws ecs create-service --service-name "$service_name" --cli-input-json "file://$configuration_file_path"
+    if [ $? -ne 0 ]; then
+        echo "ECS service $service_name creation failed"
+        exit 1
+    fi
+    echo "ECS service $service_name created successfully"
+}
+
 # get vpc id function for the vpc with tag Name=LabVPC
 get_vpc_id() {
     aws ec2 describe-vpcs --filters "Name=tag:Name,Values=LabVPC" --query "Vpcs[*].VpcId" --output text
@@ -447,4 +462,11 @@ get_listener_arn() {
     local load_balancer_arn=$1
     local port=$2
     aws elbv2 describe-listeners --load-balancer-arn "$load_balancer_arn" --query "Listeners[?Port==\`$port\`].ListenerArn" --output text
+}
+
+# get task definition revision number function
+# takes task definition name as argument
+get_task_definition_revision_number() {
+    local task_definition_name=$1
+    aws ecs describe-task-definition --task-definition "$task_definition_name" --query "taskDefinition.revision" --output text
 }
