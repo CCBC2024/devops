@@ -6,6 +6,10 @@ source ./charity-donation-deployment/common.sh
 # import the variables
 source ./charity-donation-deployment/variables.sh
 
+# Disable pager for aws cli output to avoid manual intervention for large outputs.
+# It is make sure the script runs without interruption
+export AWS_PAGER=""
+
 # define environment variables
 AWS_SECRET_ACCESS_KEY="AWS_SECRET_ACCESS_KEY"
 AWS_ACCESS_KEY_ID="AWS_ACCESS"

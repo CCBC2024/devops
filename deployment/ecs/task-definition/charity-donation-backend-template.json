@@ -22,7 +22,7 @@
                 {
                     "hostPort": 8080,
                     "protocol": "tcp",
-                    "containerPort": 3030
+                    "containerPort": 8080
                 }
             ],
             "logConfiguration": {

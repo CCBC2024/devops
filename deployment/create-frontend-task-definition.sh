@@ -6,6 +6,10 @@ source ./charity-donation-deployment/common.sh
 # import the variables
 source ./charity-donation-deployment/variables.sh
 
+# Disable pager for aws cli output to avoid manual intervention for large outputs.
+# It is make sure the script runs without interruption
+export AWS_PAGER=""
+
 # define environment variables
 NEXT_PUBLIC_CHARITY_CONTRACT_ADDRESS="0x7C1FcD9b02DF2d950463609BA7bd2229eA8BC991"
 LOAD_BALANCER_DNS=$(get_load_balancer_dns_name $load_balancer_name)
