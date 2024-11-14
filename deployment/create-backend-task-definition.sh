@@ -10,10 +10,15 @@ source ./charity-donation-deployment/variables.sh
 # It is make sure the script runs without interruption
 export AWS_PAGER=""
 
+# get aws credentials from entered values
+read -r -p "Enter AWS_ACCESS_KEY_ID: " AWS_ACCESS_KEY_ID
+read -r -p "Enter AWS_SECRET_ACCESS_KEY: " AWS_SECRET_ACCESS_KEY
+read -r -p "Enter AWS_SESSION_TOKEN (leave empty if not applicable): " AWS_SESSION_TOKEN
+
 # define environment variables
-AWS_SECRET_ACCESS_KEY="AWS_SECRET_ACCESS_KEY"
-AWS_ACCESS_KEY_ID="AWS_ACCESS"
-AWS_SESSION_TOKEN="AWS_SESSION"
+AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+AWS_SESSION_TOKEN="${AWS_SESSION_TOKEN:-}"
 ACCOUNT_ID=$(get_account_id)
 
 # update environment variables
