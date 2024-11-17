@@ -17,6 +17,7 @@ export vpc_stack_template="${cloudformation_directory}.yaml"
 # frontend and backend source code name
 export frontend_source_code="charity-donation-frontend"
 export backend_source_code="charity-donation-backend"
+export deployment_source_code="charity-donation-deployment"
 
 # frontend and backend directory path
 export frontend_directory="${root_directory}/${frontend_source_code}"
@@ -37,10 +38,14 @@ export backend_test_path="/health"
 # ecs cluster name
 export ecs_cluster_name="blockchain-charity-cluster"
 
-# ecs task definitions
+# ecs frontend task definitions
 export ecs_frontend_task_definition_path="${task_definition_directory}/${frontend_source_code}.json"
-export ecs_backend_task_definition_path="${task_definition_directory}/${backend_source_code}.json"
+export ecs_frontend_task_definition_deploy_path="${task_definition_directory}/${frontend_source_code}-deploy.json"
 export ecs_frontend_task_definition_template_path="${task_definition_directory}/${frontend_source_code}-template.json"
+
+# ecs backend task definitions
+export ecs_backend_task_definition_path="${task_definition_directory}/${backend_source_code}.json"
+export ecs_backend_task_definition_deploy_path="${task_definition_directory}/${backend_source_code}-deploy.json"
 export ecs_backend_task_definition_template_path="${task_definition_directory}/${backend_source_code}-template.json"
 
 # ecs service names

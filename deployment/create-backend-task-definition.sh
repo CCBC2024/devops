@@ -19,14 +19,23 @@ read -r -p "Enter AWS_SESSION_TOKEN (leave empty if not applicable): " AWS_SESSI
 AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
 AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
 AWS_SESSION_TOKEN="${AWS_SESSION_TOKEN:-}"
+IMAGE1_NAME="backend" # image name for backend service
 ACCOUNT_ID=$(get_account_id)
 
-# update environment variables
+# update environment variables to the backend task definition
 sed -e "s|<AWS_ACCESS_KEY_ID>|$AWS_ACCESS_KEY_ID|g" \
     -e "s|<AWS_SECRET_ACCESS_KEY>|$AWS_SECRET_ACCESS_KEY|g" \
     -e "s|<AWS_SESSION_TOKEN>|$AWS_SESSION_TOKEN|g" \
     -e "s|<ACCOUNT_ID>|$ACCOUNT_ID|g" \
+    -e "s|<IMAGE1_NAME>|$IMAGE1_NAME|g" \
     "$ecs_backend_task_definition_template_path" > "$ecs_backend_task_definition_path"
+
+# update environment variables to the backend task definition for deployment
+sed -e "s|<AWS_ACCESS_KEY_ID>|$AWS_ACCESS_KEY_ID|g" \
+    -e "s|<AWS_SECRET_ACCESS_KEY>|$AWS_SECRET_ACCESS_KEY|g" \
+    -e "s|<AWS_SESSION_TOKEN>|$AWS_SESSION_TOKEN|g" \
+    -e "s|<ACCOUNT_ID>|$ACCOUNT_ID|g" \
+    "$ecs_backend_task_definition_template_path" > "$ecs_backend_task_definition_deploy_path"
 
 # create backend task definition
 create_ecs_task_definition $ecs_backend_task_definition_path

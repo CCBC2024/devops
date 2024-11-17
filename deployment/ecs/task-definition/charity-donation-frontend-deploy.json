@@ -1,0 +1,43 @@
+{
+  "containerDefinitions": [
+    {
+      "name": "frontend",
+      "image": "frontend",
+      "environment": [
+        {
+          "name": "NEXT_PUBLIC_CHARITY_CONTRACT_ADDRESS",
+          "value": "<NEXT_PUBLIC_CHARITY_CONTRACT_ADDRESS>"
+        },
+        {
+          "name": "NEXT_PUBLIC_BACKEND_API_URL",
+          "value": "<NEXT_PUBLIC_BACKEND_API_URL>"
+        }
+      ],
+      "essential": true,
+      "portMappings": [
+        {
+          "hostPort": 8080,
+          "protocol": "tcp",
+          "containerPort": 3000
+        }
+      ],
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-create-group": "true",
+          "awslogs-group": "awslogs-capstone",
+          "awslogs-region": "us-east-1",
+          "awslogs-stream-prefix": "awslogs-capstone"
+        }
+      }
+    }
+  ],
+  "requiresCompatibilities": [
+    "FARGATE"
+  ],
+  "networkMode": "awsvpc",
+  "cpu": "512",
+  "memory": "1024",
+  "executionRoleArn": "arn:aws:iam::<ACCOUNT_ID>:role/PipelineRole",
+  "family": "charity-donation-frontend"
+}
