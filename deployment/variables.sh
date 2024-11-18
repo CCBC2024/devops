@@ -80,3 +80,9 @@ export listener_port_8080="8080"
 # health check path
 export frontend_health_check_path="/"
 export backend_health_check_path="/health"
+
+# code deploy
+export code_deploy_application_name="charity-donation"
+export frontend_deployment_group_name="${frontend_source_code}"
+export backend_deployment_group_name="${backend_source_code}"
+export deploy_role_name="DeployRole"
