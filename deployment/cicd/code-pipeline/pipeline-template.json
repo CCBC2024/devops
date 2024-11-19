@@ -47,6 +47,11 @@
               "AppSpecTemplateArtifact": "SourceArtifact",
               "AppSpecTemplatePath": "<appspec-template-path>"
             },
+            "inputArtifacts": [
+              {
+                "name": "SourceArtifact"
+              }
+            ],
             "region": "<region>",
             "runOrder": 1
           }
