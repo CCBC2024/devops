@@ -189,6 +189,34 @@ In this third implementation stage, we successfully created an ECS cluster, task
 In the final stage, we will set up the CI/CD pipeline for automated deployment of the applications.
 The application should be accessible after the final stage is completed.
 
+## Stage 4:
 
+### Task 4.1: Create AppSpec files for the CodeDeploy deployment. One AppSpec file for the backend API and one for the frontend web application.
+Just need to screenshot the AppSpec files in the repository.
 
+### Task 4.2: Create CodeDeploy application and deployment groups.
+Create CodeDeploy application and deployment groups
+```bash
+cd /home/ec2-user/environment/charity-donation-application/
+sh ./charity-donation-deployment/setup-codedeploy.sh
+```
 
+Create codecommit repository for deployment
+```bash
+cd /home/ec2-user/environment/charity-donation-application/
+sh ./charity-donation-deployment/setup-deployment-repository.sh
+```
+
+### Task 4.3: Create a pipeline for backend API in CodePipeline.
+Create a pipeline for the backend API in CodePipeline by running the following command:
+```bash
+cd /home/ec2-user/environment/charity-donation-application/
+sh ./charity-donation-deployment/setup-backend-pipeline.sh
+```
+
+### Task 4.4: Create a pipeline for the frontend web application in CodePipeline.
+Create a pipeline for the frontend web application in CodePipeline by running the following command:
+```bash
+cd /home/ec2-user/environment/charity-donation-application/
+sh ./charity-donation-deployment/setup-frontend-pipeline.sh
+```
