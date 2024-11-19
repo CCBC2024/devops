@@ -12,14 +12,16 @@ export AWS_PAGER=""
 
 # Define variables
 pipeline_role_arn=$(get_iam_role_arn "$pipeline_role_name")
+region=$(get_region)
 
 # Step 1: Create the S3 bucket
-create_s3_bucket "$backend_pipeline_bucket_name"
+s3_bucket_name=$(generate_unique_s3_bucket_name "$backend_pipeline_bucket_name")
+create_s3_bucket "$s3_bucket_name"
 
 # Step 2: Generate the charity donation backend pipeline
 sed -e "s|<pipeline-role-arn>|$pipeline_role_arn|g" \
-    -e "s|<s3-bucket-name>|$backend_pipeline_bucket_name|g" \
-    -e "s|<region>|$get_region|g" \
+    -e "s|<s3-bucket-name>|$s3_bucket_name|g" \
+    -e "s|<region>|$region|g" \
     -e "s|<code-deploy-application-name>|$code_deploy_application_name|g" \
     -e "s|<code-deploy-deployment-group-name>|$backend_deployment_group_name|g" \
     -e "s|<task-definition-template-path>|$backend_task_definition_pipeline_path|g" \
