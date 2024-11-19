@@ -106,6 +106,6 @@ export frontend_pipeline_path="${code_pipeline_directory}/$frontend_source_code-
 export backend_pipeline_path="${code_pipeline_directory}/$backend_source_code-pipeline.json"
 export frontend_task_definition_pipeline_path="${task_definition_path}/$frontend_source_code-deploy.json"
 export backend_task_definition_pipeline_path="${task_definition_path}/$backend_source_code-deploy.json"
-export frontend_appspec_pipeline_path="${code_deploy_path}/$frontend_source_code-appspec.json"
-export backend_appspec_pipeline_path="${code_deploy_path}/$backend_source_code-appspec.json"
+export frontend_appspec_pipeline_path="${code_deploy_path}/$frontend_source_code-appspec.yaml"
+export backend_appspec_pipeline_path="${code_deploy_path}/$backend_source_code-appspec.yaml"
 
