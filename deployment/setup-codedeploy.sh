@@ -10,7 +10,7 @@ source ./charity-donation-deployment/variables.sh
 create_code_deploy_application "$code_deploy_application_name"
 
 # define environment variables
-deploy_role_arn=$(get_deploy_role_arn "$deploy_role_name")
+deploy_role_arn=$(get_iam_role_arn "$deploy_role_name")
 listener_80_arn=$(get_listener_arn "$load_balancer_name" "$listener_port_80")
 listener_8080_arn=$(get_listener_arn "$load_balancer_name" "$listener_port_8080")
 

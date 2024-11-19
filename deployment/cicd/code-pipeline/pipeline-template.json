@@ -1,0 +1,61 @@
+{
+  "pipeline": {
+    "name": "<pipeline-name>",
+    "roleArn": "<pipeline-role-arn>",
+    "stages": [
+      {
+        "name": "Source",
+        "actions": [
+          {
+            "name": "SourceAction",
+            "actionTypeId": {
+              "category": "Source",
+              "owner": "AWS",
+              "provider": "CodeCommit",
+              "version": "1"
+            },
+            "configuration": {
+              "RepositoryName": "<deployment-repository-name>",
+              "BranchName": "dev"
+            },
+            "outputArtifacts": [
+              {
+                "name": "SourceArtifact"
+              }
+            ],
+            "region": "<region>",
+            "runOrder": 1
+          }
+        ]
+      },
+      {
+        "name": "Deploy",
+        "actions": [
+          {
+            "name": "DeployAction",
+            "actionTypeId": {
+              "category": "Deploy",
+              "owner": "AWS",
+              "provider": "CodeDeployToECS",
+              "version": "1"
+            },
+            "configuration": {
+              "ApplicationName": "<code-deploy-application-name>",
+              "DeploymentGroupName": "<code-deploy-deployment-group-name>",
+              "TaskDefinitionTemplateArtifact": "SourceArtifact",
+              "TaskDefinitionTemplatePath": "<task-definition-template-path>",
+              "AppSpecTemplateArtifact": "SourceArtifact",
+              "AppSpecTemplatePath": "<appspec-template-path>"
+            },
+            "region": "<region>",
+            "runOrder": 1
+          }
+        ]
+      }
+    ],
+    "artifactStore": {
+      "type": "S3",
+      "location": "<s3-bucket-name>"
+    }
+  }
+}

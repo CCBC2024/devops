@@ -478,6 +478,41 @@ create_code_deploy_deployment_group() {
     echo "Code deploy group $deployment_group_name created successfully"
 }
 
+# generate unique s3 bucket name function
+# takes bucket name as argument
+generate_unique_s3_bucket_name() {
+    local bucket_name=$1
+    echo "${bucket_name}-$(date +%s)"
+}
+
+# create s3 bucket function
+# takes bucket name as argument
+create_s3_bucket() {
+    local bucket_name=$1
+    echo "Creating S3 bucket $bucket_name ..."
+    aws s3api create-bucket --bucket "$bucket_name" --region "$(get_region)"
+    if [ $? -ne 0 ]; then
+        echo "S3 bucket $bucket_name creation failed"
+        exit 1
+    fi
+    echo "S3 bucket $bucket_name created successfully"
+}
+
+# create code pipeline function
+# takes pipeline name as first argument
+# takes pipeline configuration file as second argument
+create_code_pipeline() {
+    local pipeline_name=$1
+    local pipeline_configuration_file=$2
+    echo "Creating code pipeline $pipeline_name ..."
+    aws codepipeline create-pipeline --cli-input-json "file://$pipeline_configuration_file" --region "$(get_region)"
+    if [ $? -ne 0 ]; then
+        echo "Code pipeline $pipeline_name creation failed"
+        exit 1
+    fi
+    echo "Code pipeline $pipeline_name created successfully"
+}
+
 # get vpc id function for the vpc with tag Name=LabVPC
 get_vpc_id() {
     aws ec2 describe-vpcs --filters "Name=tag:Name,Values=LabVPC" --query "Vpcs[*].VpcId" --output text
@@ -536,9 +571,14 @@ get_task_definition_revision_number() {
     aws ecs describe-task-definition --task-definition "$task_definition_name" --query "taskDefinition.revision" --output text
 }
 
-# get deploy role arn function
+# get iam role arn function
 # takes role name as argument
-get_deploy_role_arn() {
+get_iam_role_arn() {
     local role_name=$1
     aws iam get-role --role-name "$role_name" --query "Role.Arn" --output text
+}
+
+# get region function
+get_region() {
+    aws configure get region
 }
