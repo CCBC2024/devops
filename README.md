@@ -220,3 +220,6 @@ Create a pipeline for the frontend web application in CodePipeline by running th
 cd /home/ec2-user/environment/charity-donation-application/
 sh ./charity-donation-deployment/setup-frontend-pipeline.sh
 ```
+
+#### Need to add this step to pipeline
+![img.png](img.png)
