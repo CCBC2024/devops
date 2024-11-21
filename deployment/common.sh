@@ -504,6 +504,16 @@ create_s3_bucket() {
 create_code_pipeline() {
     local pipeline_name=$1
     local pipeline_configuration_file=$2
+
+    # validate pipeline configuration file
+    echo "Validating pipeline configuration file $pipeline_configuration_file ..."
+    aws codepipeline validate-pipeline-definition --cli-input-json "file://$pipeline_configuration_file"
+    if [ $? -ne 0 ]; then
+        echo "Pipeline configuration file $pipeline_configuration_file is invalid"
+        exit 1
+    fi
+    echo "Pipeline configuration file $pipeline_configuration_file is valid"
+
     echo "Creating code pipeline $pipeline_name ..."
     aws codepipeline create-pipeline --cli-input-json "file://$pipeline_configuration_file" --region "$(get_region)"
     if [ $? -ne 0 ]; then

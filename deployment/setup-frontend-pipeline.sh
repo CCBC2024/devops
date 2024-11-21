@@ -28,6 +28,7 @@ sed -e "s|<pipeline-role-arn>|$pipeline_role_arn|g" \
     -e "s|<appspec-template-path>|$frontend_appspec_pipeline_path|g" \
     -e "s|<pipeline-name>|$frontend_source_code|g" \
     -e "s|<deployment-repository-name>|$deployment_source_code|g" \
+    -e "s|<ecr-repository-name>|$frontend_source_code|g" \
     "$pipeline_template_path" > "$frontend_pipeline_path"
 
 echo "Updated charity donation JSON saved to $frontend_pipeline_path"

@@ -25,26 +25,6 @@
             ],
             "region": "<region>",
             "runOrder": 1
-          },
-          {
-            "name": "Image",
-            "actionTypeId": {
-              "category": "Source",
-              "owner": "AWS",
-              "provider": "ECR",
-              "version": "1"
-            },
-            "configuration": {
-              "RepositoryName": "<ecr-repository-name>",
-              "ImageTag": "latest"
-            },
-            "outputArtifacts": [
-              {
-                "name": "ImageArtifact"
-              }
-            ],
-            "region": "<region>",
-            "runOrder": 2
           }
         ]
       },
@@ -65,16 +45,11 @@
               "TaskDefinitionTemplateArtifact": "SourceArtifact",
               "TaskDefinitionTemplatePath": "<task-definition-template-path>",
               "AppSpecTemplateArtifact": "SourceArtifact",
-              "AppSpecTemplatePath": "<appspec-template-path>",
-              "Image1ArtifactName": "ImageArtifact",
-              "Image1Placeholder": "IMAGE1_NAME"
+              "AppSpecTemplatePath": "<appspec-template-path>"
             },
             "inputArtifacts": [
               {
                 "name": "SourceArtifact"
-              },
-              {
-                "name": "ImageArtifact"
               }
             ],
             "region": "<region>",
