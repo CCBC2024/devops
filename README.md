@@ -191,6 +191,18 @@ The application should be accessible after the final stage is completed.
 
 ## Stage 4:
 
+To prepare for this stage, we need to have the following resources:
+- The Cloud9 environment set up in the previous stages.
+- Create DynamoDB table in the Learner Lab: https://awsacademy.instructure.com/courses/92322/modules/items/8491687
+- Get AWS credentials from the Learner Lab and copy them to your text editor for use in the following tasks.
+
+We then need to provision the resources in the stage 2 and stage 3 before running the tasks in this stage.
+```bash
+cd /home/ec2-user/environment/charity-donation-application/
+sh ./charity-donation-deployment/setup-stage2.sh
+sh ./charity-donation-deployment/setup-stage3.sh
+```
+
 ### Task 4.1: Create AppSpec files for the CodeDeploy deployment. One AppSpec file for the backend API and one for the frontend web application.
 Just need to screenshot the AppSpec files in the repository.
 
