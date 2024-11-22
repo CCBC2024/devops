@@ -2,6 +2,8 @@
   "pipeline": {
     "name": "<pipeline-name>",
     "roleArn": "<pipeline-role-arn>",
+    "executionMode": "QUEUED",
+    "pipelineType": "V2",
     "stages": [
       {
         "name": "Source",
