@@ -1,0 +1,16 @@
+#!/bin/bash
+
+# Exit on errors
+set -e
+
+# Run the push script
+echo "Running push script..."
+cd /home/ec2-user/environment/charity-donation-application/
+sh ./charity-donation-deployment/push-frontend-image-to-ecr.sh
+
+if [ $? -eq 0 ]; then
+    echo "Push script executed successfully."
+else
+    echo "Push script failed."
+    exit 1
+fi

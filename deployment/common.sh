@@ -116,6 +116,39 @@ initialize_codecommit_source_code() {
     echo "Codecommit $repository_name source code initialized successfully"
 }
 
+# setup git pre-commit hook function
+# takes source code directory as first argument
+# takes pre-commit hook file as second argument
+setup_git_pre_commit_hook() {
+    local source_code_dir=$1
+    local pre_commit_hook_file=$2
+
+    echo "Setting up pre-commit hook for $source_code_dir ..."
+    cp "$pre_commit_hook_file" "$source_code_dir/.git/hooks/pre-commit"
+    chmod +x "$source_code_dir/.git/hooks/pre-commit"
+    if [ $? -ne 0 ]; then
+        echo "Setting up pre-commit hook for $source_code_dir failed"
+        exit 1
+    fi
+    echo "Pre-commit hook for $source_code_dir set up successfully"
+}
+
+# setup git pre-push hook function
+# takes source code directory as first argument
+setup_git_pre_push_hook() {
+    local source_code_dir=$1
+    local pre_push_hook_file=$2
+
+    echo "Setting up pre-push hook for $source_code_dir ..."
+    cp "$pre_push_hook_file" "$source_code_dir/.git/hooks/pre-push"
+    chmod +x "$source_code_dir/.git/hooks/pre-push"
+    if [ $? -ne 0 ]; then
+        echo "Setting up pre-push hook for $source_code_dir failed"
+        exit 1
+    fi
+    echo "Pre-push hook for $source_code_dir set up successfully"
+}
+
 # build the docker image function
 # takes source code directory as first argument
 # takes docker image name as second argument

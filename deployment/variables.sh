@@ -17,6 +17,7 @@ ecs_directory="${deployment_directory}/$ecs_path"
 task_definition_directory="${ecs_directory}/task-definition"
 ecs_service_directory="${ecs_directory}/service"
 code_pipeline_directory="${deployment_directory}/$code_pipeline_path"
+git_hook_directory="${deployment_directory}/git-hook"
 
 # vpc cloudformation stack
 export vpc_stack_name="vpc-stack"
@@ -108,4 +109,10 @@ export frontend_task_definition_pipeline_path="${task_definition_path}/$frontend
 export backend_task_definition_pipeline_path="${task_definition_path}/$backend_source_code-deploy.json"
 export frontend_appspec_pipeline_path="${code_deploy_path}/$frontend_source_code-appspec.yaml"
 export backend_appspec_pipeline_path="${code_deploy_path}/$backend_source_code-appspec.yaml"
+
+# git hooks
+export backend_git_pre_commit_hook_path="${git_hook_directory}/$backend_source_code-pre-commit"
+export frontend_git_pre_commit_hook_path="${git_hook_directory}/$frontend_source_code-pre-commit"
+export backend_git_pre_push_hook_path="${git_hook_directory}/$backend_source_code-pre-push"
+export frontend_git_pre_push_hook_path="${git_hook_directory}/$frontend_source_code-pre-push"
 

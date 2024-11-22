@@ -246,3 +246,7 @@ The applications should be accessible after the deployment is completed.
 
 The backend pipeline is created successfully looks like this:
 ![img_2.png](img_2.png)
+
+### Conclusion
+In this final implementation stage, we successfully created AppSpec files for the CodeDeploy deployment, CodeDeploy application, deployment groups, and pipelines for the backend API and frontend web application in CodePipeline. The applications are now deployed automatically using the CI/CD pipeline.
+The applications should be accessible after the deployment is completed. The frontend application can be accessed using the load balancer DNS name.

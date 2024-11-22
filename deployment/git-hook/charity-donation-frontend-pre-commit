@@ -1,0 +1,16 @@
+#!/bin/bash
+
+# Exit on errors
+set -e
+
+# Run the build script
+echo "Running build script..."
+cd /home/ec2-user/environment/charity-donation-application/
+sh ./charity-donation-deployment/build-frontend-docker-image.sh
+
+if [ $? -eq 0 ]; then
+    echo "Build script executed successfully."
+else
+    echo "Build script failed."
+    exit 1
+fi
