@@ -226,6 +226,11 @@ cd /home/ec2-user/environment/charity-donation-application/
 sh ./charity-donation-deployment/setup-backend-pipeline.sh
 ```
 
+After the pipeline is created, access the pipeline in the AWS Management Console.
+https://us-east-1.console.aws.amazon.com/codesuite/codepipeline/pipelines/charity-donation-backend/view?region=us-east-1
+
+You can run the next task while waiting for the pipeline to complete the deployment process.
+
 ### Task 4.4: Create a pipeline for the frontend web application in CodePipeline.
 Create a pipeline for the frontend web application in CodePipeline by running the following command:
 ```bash
@@ -233,5 +238,11 @@ cd /home/ec2-user/environment/charity-donation-application/
 sh ./charity-donation-deployment/setup-frontend-pipeline.sh
 ```
 
-#### Need to add this step to pipeline
-![img.png](img.png)
+After the pipeline is created, access the pipeline in the AWS Management Console.
+https://us-east-1.console.aws.amazon.com/codesuite/codepipeline/pipelines/charity-donation-frontend/view?region=us-east-1
+
+Wait for the pipelines to complete the deployment process. 
+The applications should be accessible after the deployment is completed.
+
+The backend pipeline is created successfully looks like this:
+![img_2.png](img_2.png)

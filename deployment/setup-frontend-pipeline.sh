@@ -1,4 +1,5 @@
 # Description: This script is used to setup the frontend pipeline for charity donation application.
+# Reference: https://docs.aws.amazon.com/codepipeline/latest/userguide/tutorials-ecs-ecr-codedeploy.html#tutorials-ecs-ecr-codedeploy-pipeline
 
 # import the common functions
 source ./charity-donation-deployment/common.sh
