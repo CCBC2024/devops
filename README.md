@@ -251,8 +251,8 @@ The backend pipeline is created successfully looks like this:
 ![img_2.png](img_2.png)
 
 After the pipeline is completed. Go to pipeline in the AWS Management Console.
-Click Edit on the pipeline. Then click Save button to enable event bridge trigger for the pipeline.
-Go to Event Bridge console to check rules: https://us-east-1.console.aws.amazon.com/events/home?region=us-east-1#/rules
+Click Edit on the pipeline. Then click Save button to enable EventBridge trigger for the pipeline.
+Go to EventBridge console to check rules: https://us-east-1.console.aws.amazon.com/events/home?region=us-east-1#/rules
 
 ### Task 4.5: Add auto-build step to the source code repository.
 Add auto-build step to the source code repository by running the following command:
