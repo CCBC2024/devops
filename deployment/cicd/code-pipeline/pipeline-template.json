@@ -44,7 +44,7 @@
               }
             ],
             "region": "<region>",
-            "runOrder": 2
+            "runOrder": 1
           }
         ]
       },
@@ -67,7 +67,7 @@
               "AppSpecTemplateArtifact": "SourceArtifact",
               "AppSpecTemplatePath": "<appspec-template-path>",
               "Image1ArtifactName": "ImageArtifact",
-              "Image1Placeholder": "IMAGE1_NAME"
+              "Image1ContainerName": "IMAGE1_NAME"
             },
             "inputArtifacts": [
               {
