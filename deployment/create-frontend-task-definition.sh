@@ -14,13 +14,21 @@ export AWS_PAGER=""
 NEXT_PUBLIC_CHARITY_CONTRACT_ADDRESS="0x7C1FcD9b02DF2d950463609BA7bd2229eA8BC991"
 LOAD_BALANCER_DNS=$(get_load_balancer_dns_name $load_balancer_name)
 NEXT_PUBLIC_BACKEND_API_URL="http://$LOAD_BALANCER_DNS"
+IMAGE1_NAME="frontend" # image name for frontend service
 ACCOUNT_ID=$(get_account_id)
 
-# update environment variables
+# update environment variables to the frontend task definition
 sed -e "s|<NEXT_PUBLIC_CHARITY_CONTRACT_ADDRESS>|$NEXT_PUBLIC_CHARITY_CONTRACT_ADDRESS|g" \
     -e "s|<NEXT_PUBLIC_BACKEND_API_URL>|$NEXT_PUBLIC_BACKEND_API_URL|g" \
     -e "s|<ACCOUNT_ID>|$ACCOUNT_ID|g" \
+    -e "s|<IMAGE1_NAME>|$IMAGE1_NAME|g" \
     "$ecs_frontend_task_definition_template_path" > "$ecs_frontend_task_definition_path"
+
+# update environment variables to the frontend task definition for deployment
+sed -e "s|<NEXT_PUBLIC_CHARITY_CONTRACT_ADDRESS>|$NEXT_PUBLIC_CHARITY_CONTRACT_ADDRESS|g" \
+    -e "s|<NEXT_PUBLIC_BACKEND_API_URL>|$NEXT_PUBLIC_BACKEND_API_URL|g" \
+    -e "s|<ACCOUNT_ID>|$ACCOUNT_ID|g" \
+    "$ecs_frontend_task_definition_template_path" > "$ecs_frontend_task_definition_deploy_path"
 
 # create frontend task definition
 create_ecs_task_definition $ecs_frontend_task_definition_path

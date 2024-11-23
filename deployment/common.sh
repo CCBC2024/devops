@@ -116,6 +116,39 @@ initialize_codecommit_source_code() {
     echo "Codecommit $repository_name source code initialized successfully"
 }
 
+# setup git pre-commit hook function
+# takes source code directory as first argument
+# takes pre-commit hook file as second argument
+setup_git_pre_commit_hook() {
+    local source_code_dir=$1
+    local pre_commit_hook_file=$2
+
+    echo "Setting up pre-commit hook for $source_code_dir ..."
+    cp "$pre_commit_hook_file" "$source_code_dir/.git/hooks/pre-commit"
+    chmod +x "$source_code_dir/.git/hooks/pre-commit"
+    if [ $? -ne 0 ]; then
+        echo "Setting up pre-commit hook for $source_code_dir failed"
+        exit 1
+    fi
+    echo "Pre-commit hook for $source_code_dir set up successfully"
+}
+
+# setup git pre-push hook function
+# takes source code directory as first argument
+setup_git_pre_push_hook() {
+    local source_code_dir=$1
+    local pre_push_hook_file=$2
+
+    echo "Setting up pre-push hook for $source_code_dir ..."
+    cp "$pre_push_hook_file" "$source_code_dir/.git/hooks/pre-push"
+    chmod +x "$source_code_dir/.git/hooks/pre-push"
+    if [ $? -ne 0 ]; then
+        echo "Setting up pre-push hook for $source_code_dir failed"
+        exit 1
+    fi
+    echo "Pre-push hook for $source_code_dir set up successfully"
+}
+
 # build the docker image function
 # takes source code directory as first argument
 # takes docker image name as second argument
@@ -418,6 +451,102 @@ create_ecs_service() {
     echo "ECS service $service_name created successfully"
 }
 
+# create code deploy application function
+# takes application name as argument
+create_code_deploy_application() {
+    local application_name=$1
+    echo "Creating codedeploy application $application_name ..."
+
+    aws deploy create-application --application-name "$application_name" --compute-platform ECS
+    if [ $? -ne 0 ]; then
+        echo "Codedeploy application $application_name creation failed"
+        exit 1
+    fi
+
+    # verify application running
+    aws deploy get-application --application-name "$application_name"
+    if [ $? -ne 0 ]; then
+        echo "Failed to verify Codedeploy application $application_name"
+        exit 1
+    fi
+
+    echo "Codedeploy application $application_name created successfully"
+}
+
+# create code deploy deployment group function
+# takes application name as first argument
+# takes deployment group name as second argument
+# takes deploy role arn as third argument
+# takes cluster name as fourth argument
+# takes service name as fifth argument
+# takes target group one name as sixth argument
+# takes target group two name as seventh argument
+# takes listener 80 arn as eighth argument
+# takes listener 8080 arn as ninth argument
+create_code_deploy_deployment_group() {
+    local application_name=$1
+    local deployment_group_name=$2
+    local deploy_role_arn=$3
+    local cluster_name=$4
+    local service_name=$5
+    local target_group_one_name=$6
+    local target_group_two_name=$7
+    local listener_80_arn=$8
+    local listener_8080_arn=$9
+
+    echo "Creating code deploy group $deployment_group_name for $service_name ..."
+    aws deploy create-deployment-group \
+        --application-name "$application_name" \
+        --deployment-group-name "$deployment_group_name" \
+        --service-role-arn "$deploy_role_arn" \
+        --deployment-config-name CodeDeployDefault.ECSAllAtOnce \
+        --ecs-services clusterName="$cluster_name",serviceName="$service_name" \
+        --load-balancer-info "targetGroupPairInfoList=[{targetGroups=[{name=$target_group_two_name},{name=$target_group_one_name}],prodTrafficRoute={listenerArns=[\"$listener_80_arn\"]},testTrafficRoute={listenerArns=[\"$listener_8080_arn\"]}}]" \
+        --deployment-style deploymentType=BLUE_GREEN,deploymentOption=WITH_TRAFFIC_CONTROL \
+        --blue-green-deployment-configuration "terminateBlueInstancesOnDeploymentSuccess={action=TERMINATE,terminationWaitTimeInMinutes=5},deploymentReadyOption={actionOnTimeout=CONTINUE_DEPLOYMENT}"
+    if [ $? -ne 0 ]; then
+        echo "Code deploy group $deployment_group_name creation failed"
+        exit 1
+    fi
+    echo "Code deploy group $deployment_group_name created successfully"
+}
+
+# generate unique s3 bucket name function
+# takes bucket name as argument
+generate_unique_s3_bucket_name() {
+    local bucket_name=$1
+    echo "${bucket_name}-$(date +%s)"
+}
+
+# create s3 bucket function
+# takes bucket name as argument
+create_s3_bucket() {
+    local bucket_name=$1
+    echo "Creating S3 bucket $bucket_name ..."
+    aws s3api create-bucket --bucket "$bucket_name" --region "$(get_region)"
+    if [ $? -ne 0 ]; then
+        echo "S3 bucket $bucket_name creation failed"
+        exit 1
+    fi
+    echo "S3 bucket $bucket_name created successfully"
+}
+
+# create code pipeline function
+# takes pipeline name as first argument
+# takes pipeline configuration file as second argument
+create_code_pipeline() {
+    local pipeline_name=$1
+    local pipeline_configuration_file=$2
+
+    echo "Creating code pipeline $pipeline_name ..."
+    aws codepipeline create-pipeline --cli-input-json "file://$pipeline_configuration_file" --region "$(get_region)"
+    if [ $? -ne 0 ]; then
+        echo "Code pipeline $pipeline_name creation failed"
+        exit 1
+    fi
+    echo "Code pipeline $pipeline_name created successfully"
+}
+
 # get vpc id function for the vpc with tag Name=LabVPC
 get_vpc_id() {
     aws ec2 describe-vpcs --filters "Name=tag:Name,Values=LabVPC" --query "Vpcs[*].VpcId" --output text
@@ -474,4 +603,16 @@ get_listener_arn() {
 get_task_definition_revision_number() {
     local task_definition_name=$1
     aws ecs describe-task-definition --task-definition "$task_definition_name" --query "taskDefinition.revision" --output text
+}
+
+# get iam role arn function
+# takes role name as argument
+get_iam_role_arn() {
+    local role_name=$1
+    aws iam get-role --role-name "$role_name" --query "Role.Arn" --output text
+}
+
+# get region function
+get_region() {
+    aws configure get region
 }

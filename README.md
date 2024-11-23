@@ -189,6 +189,91 @@ In this third implementation stage, we successfully created an ECS cluster, task
 In the final stage, we will set up the CI/CD pipeline for automated deployment of the applications.
 The application should be accessible after the final stage is completed.
 
+## Stage 4:
+
+To prepare for this stage, we need to have the following resources:
+- The Cloud9 environment set up in the previous stages.
+- Create DynamoDB table in the Learner Lab: https://awsacademy.instructure.com/courses/92322/modules/items/8491687
+- Get AWS credentials from the Learner Lab and copy them to your text editor for use in the following tasks.
+
+We then need to provision the resources in the stage 2 and stage 3 before running the tasks in this stage.
+```bash
+cd /home/ec2-user/environment/charity-donation-application/
+sh ./charity-donation-deployment/setup-stage2.sh
+sh ./charity-donation-deployment/setup-stage3.sh
+```
+
+### Task 4.1: Create AppSpec files for the CodeDeploy deployment. One AppSpec file for the backend API and one for the frontend web application.
+Just need to screenshot the AppSpec files in the repository.
+
+### Task 4.2: Create CodeDeploy application and deployment groups.
+Create CodeDeploy application and deployment groups
+```bash
+cd /home/ec2-user/environment/charity-donation-application/
+sh ./charity-donation-deployment/setup-codedeploy.sh
+```
+
+Create codecommit repository for deployment
+```bash
+cd /home/ec2-user/environment/charity-donation-application/
+sh ./charity-donation-deployment/setup-deployment-repository.sh
+```
+
+### Task 4.3: Create a pipeline for backend API in CodePipeline.
+Create a pipeline for the backend API in CodePipeline by running the following command:
+```bash
+cd /home/ec2-user/environment/charity-donation-application/
+sh ./charity-donation-deployment/setup-backend-pipeline.sh
+```
+
+After the pipeline is created, access the pipeline in the AWS Management Console.
+https://us-east-1.console.aws.amazon.com/codesuite/codepipeline/pipelines/charity-donation-backend/view?region=us-east-1
+
+After the pipeline is completed. Go to pipeline in the AWS Management Console.
+Click Edit on the pipeline. Then click Save button to enable event bridge trigger for the pipeline.
+
+You can run the next task while waiting for the pipeline to complete the deployment process.
+
+### Task 4.4: Create a pipeline for the frontend web application in CodePipeline.
+Create a pipeline for the frontend web application in CodePipeline by running the following command:
+```bash
+cd /home/ec2-user/environment/charity-donation-application/
+sh ./charity-donation-deployment/setup-frontend-pipeline.sh
+```
+
+After the pipeline is created, access the pipeline in the AWS Management Console.
+https://us-east-1.console.aws.amazon.com/codesuite/codepipeline/pipelines/charity-donation-frontend/view?region=us-east-1
+
+Wait for the pipelines to complete the deployment process. 
+The applications should be accessible after the deployment is completed.
+
+The backend pipeline is created successfully looks like this:
+![img_2.png](img_2.png)
+
+After the pipeline is completed. Go to pipeline in the AWS Management Console.
+Click Edit on the pipeline. Then click Save button to enable EventBridge trigger for the pipeline.
+Go to EventBridge console to check rules: https://us-east-1.console.aws.amazon.com/events/home?region=us-east-1#/rules
+
+### Task 4.5: Add auto-build step to the source code repository.
+Add auto-build step to the source code repository by running the following command:
+```bash
+cd /home/ec2-user/environment/charity-donation-application/
+sh ./charity-donation-deployment/setup-frontend-auto-build.sh  
+sh ./charity-donation-deployment/setup-backend-auto-build.sh 
+```
+
+After the auto-build step is added.
+When we commit the changes in the repository, the docker image will be built automatically.
+When we push the changes to the repository, the docker image will be pushed to the ECR repository automatically.
 
 
 
+### Conclusion
+In this final implementation stage, we successfully created AppSpec files for the CodeDeploy deployment, CodeDeploy application, deployment groups, and pipelines for the backend API and frontend web application in CodePipeline. The applications are now deployed automatically using the CI/CD pipeline.
+The applications should be accessible after the deployment is completed. The frontend application can be accessed using the load balancer DNS name.
+
+## Additional commands
+Pure all docker images and volumes
+```bash
+docker system prune --all --volumes -f
+```

@@ -2,7 +2,7 @@
     "containerDefinitions": [
         {
             "name": "backend",
-            "image": "backend",
+            "image": "<IMAGE1_NAME>",
             "environment": [
                 {
                     "name": "AWS_ACCESS_KEY_ID",

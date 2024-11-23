@@ -1,10 +1,10 @@
 {
-    "taskDefinition": "customer-microservice:3",
-    "cluster": "microservices-serverlesscluster",
+    "taskDefinition": "charity-donation-frontend:REVISION-NUMBER",
+    "cluster": "blockchain-charity-cluster",
     "loadBalancers": [
         {
-            "targetGroupArn": "arn:aws:elasticloadbalancing:us-east-1:054077177615:targetgroup/customer-tg-two/ecf2c7bc6df4bd4a",
-            "containerName": "customer",
+            "targetGroupArn": "CHARITY-TG-TWO-ARN",
+            "containerName": "frontend",
             "containerPort": 8080
         }
     ],
@@ -17,11 +17,11 @@
     "networkConfiguration": {
         "awsvpcConfiguration": {
             "subnets": [
-                "subnet-01df3984442ed9630",
-                "subnet-074d7cc498d8c05f3"
+                "PUBLIC-SUBNET-1-ID",
+                "PUBLIC-SUBNET-2-ID"
             ],
             "securityGroups": [
-                "sg-0820fee64ac6c3a9c"
+                "SECURITY-GROUP-ID"
             ],
             "assignPublicIp": "ENABLED"
         }
