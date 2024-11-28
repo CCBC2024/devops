@@ -283,7 +283,11 @@ We first need to start two labs:
 - Learner Lab: https://awsacademy.instructure.com/courses/92322/modules/items/8491687
 - CI/CD Lab: https://awsacademy.instructure.com/courses/92321/modules/items/8491173
 
-We then create the Cloud9 environment in the CI/CD Lab with the following settings:
+We then create the DynamoDB table in the Learner Lab using the cloudformation template.
+
+After that, we get the AWS credentials from the Learner Lab.
+
+Next, We create the Cloud9 environment in the CI/CD Lab with the following settings:
 - Name: charityDonationIDE
 - Instance type: t3.small
 - Platform: Amazon Linux
@@ -303,5 +307,3 @@ To set up all the AWS resources in all stages, run the following command:
 cd /home/ec2-user/environment/charity-donation-application/
 sh ./charity-donation-deployment/setup.sh
 ```
-
-While waiting for the resources to be created in the CI/CD Lab, we can set up the DynamoDB table in the Learner Lab and get the AWS credentials from the Learner Lab.
