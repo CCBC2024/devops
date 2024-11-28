@@ -277,3 +277,10 @@ Pure all docker images and volumes
 ```bash
 docker system prune --all --volumes -f
 ```
+
+## Setup all AWS resources
+To set up all the AWS resources in all stages, run the following command:
+```bash
+cd /home/ec2-user/environment/charity-donation-application/
+sh ./charity-donation-deployment/setup.sh
+```
