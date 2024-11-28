@@ -303,3 +303,5 @@ To set up all the AWS resources in all stages, run the following command:
 cd /home/ec2-user/environment/charity-donation-application/
 sh ./charity-donation-deployment/setup.sh
 ```
+
+While waiting for the resources to be created in the CI/CD Lab, we can set up the DynamoDB table in the Learner Lab and get the AWS credentials from the Learner Lab.
