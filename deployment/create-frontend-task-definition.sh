@@ -11,7 +11,7 @@ source ./charity-donation-deployment/variables.sh
 export AWS_PAGER=""
 
 # define environment variables
-NEXT_PUBLIC_CHARITY_CONTRACT_ADDRESS="0x7C1FcD9b02DF2d950463609BA7bd2229eA8BC991"
+NEXT_PUBLIC_CHARITY_CONTRACT_ADDRESS="0x88C2d310a615A4B9EcCdf12519aa2cdc431684b3"
 LOAD_BALANCER_DNS=$(get_load_balancer_dns_name $load_balancer_name)
 NEXT_PUBLIC_BACKEND_API_URL="http://$LOAD_BALANCER_DNS"
 IMAGE1_NAME="frontend" # image name for frontend service

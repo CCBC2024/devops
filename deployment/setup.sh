@@ -16,4 +16,15 @@ docker system prune --all --volumes -f
 # provision all the AWS resources in the stage 4
 sh ./charity-donation-deployment/setup-stage4.sh
 
-echo "All AWS resources for charity donation application are setup successfully."
+# import the common functions
+source ./charity-donation-deployment/common.sh
+
+# import the variables
+source ./charity-donation-deployment/variables.sh
+
+# get the load balancer DNS name
+LOAD_BALANCER_DNS=$(get_load_balancer_dns_name "$load_balancer_name")
+
+# print the load balancer DNS name
+echo "All commands are executed successfully.
+After the deployment is completed, you can access the charity donation application at http://$LOAD_BALANCER_DNS"

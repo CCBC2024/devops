@@ -279,6 +279,25 @@ docker system prune --all --volumes -f
 ```
 
 ## Setup all AWS resources
+We first need to start two labs:
+- Learner Lab: https://awsacademy.instructure.com/courses/92322/modules/items/8491687
+- CI/CD Lab: https://awsacademy.instructure.com/courses/92321/modules/items/8491173
+
+We then create the Cloud9 environment in the CI/CD Lab with the following settings:
+- Name: charityDonationIDE
+- Instance type: t3.small
+- Platform: Amazon Linux
+- Network settings:
+  - VPC: LabVPC,
+  - Subnet: Public Subnet1
+  - Connection: SSH
+
+Then upload the project file to the Cloud9 environment, which named `charity-donation-application.zip`.
+Unzip the file after uploading by running the following command:
+```bash
+unzip charity-donation-application.zip
+```
+
 To set up all the AWS resources in all stages, run the following command:
 ```bash
 cd /home/ec2-user/environment/charity-donation-application/
